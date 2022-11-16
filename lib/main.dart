@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:counter_7/form.dart';
+import 'package:counter_7/show.dart';
 
 void main() {
   runApp(const MyApp());
@@ -81,6 +83,40 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
+
+            drawer: Drawer(
+        child: Column(
+          children: [
+            ListTile(
+              title: const Text('Counter'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Program Counter')),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Tambah Budget'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyFormPage()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Data Budget'),
+              onTap: () {        
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyShowPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -135,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: const Icon(Icons.add),
           ),
         )
-      ]), // This trailing comma makes auto-formatting nicer for build methods.
+      ]),
     );
   }
 }
