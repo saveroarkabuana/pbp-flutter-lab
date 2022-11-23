@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:counter_7/main.dart';
 import 'package:counter_7/form.dart';
 import 'package:counter_7/form.dart' as form;
+import 'package:counter_7/page/drawer.dart';
 
 var formData = form.budgetList;
 
@@ -24,41 +25,7 @@ class _MyShowPageState extends State<MyShowPage> {
         title: Text('Data Budget'),
       ),
 
-      drawer: Drawer(
-          child: Column(
-            children: [
-              ListTile(
-                title: const Text('Counter'),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Program Counter')),
-                  );
-                },
-              ),
-
-              ListTile(
-                title: const Text('Tambah Budget'),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyFormPage()),
-                  );
-                },
-              ),
-
-              ListTile(
-                title: const Text('Data Budget'),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyShowPage()),
-                  );
-                },
-              ),
-            ],
-          ),
-      ),
+      drawer: buildDrawer(context),
       
       body: Center(
         child: Column(
