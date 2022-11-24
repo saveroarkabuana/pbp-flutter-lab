@@ -248,6 +248,165 @@ for (int i=0; i < formData.length; i++)...[
             ),
 ```
 
+## Tugas 9
+
+## Apakah bisa kita melakukan pengambilan data JSON tanpa membuat model terlebih dahulu? Jika iya, apakah hal tersebut lebih baik daripada membuat model sebelum melakukan pengambilan data JSON?.
+
+- Bisa dilakukan pengambilan data JSON tanpa membuat model terlebih dahulu. Hal ini dengan mengonversi data json secara langsung setelah didekodekan dari url. Akan tetapi, penggunaan metode ini jarang digunakan. Dari dokumentasi Flutter, disarankan untuk membuat folder model terlebih dahulu. Jadi menurut saya metode tanpa membuat model tidak lebih baik dibanding metode membuat model terlebih dahulu dengan alasan metode tanpa membuat model akan lebih sulit dibaca dan tidak efisien.
+
+## Sebutkan widget apa saja yang kamu pakai di proyek kali ini dan jelaskan fungsinya.
+- (Wigdet yang ditambah untuk Tugas 8)
+- ```ListTile```, berfungsi untuk menampung elemen _text_ dalam satu baris yang kemudian bisa terurut sesuai dengan urgensi ```ListTile``` elemen tersebut.
+- ```MaterialPageRoute```, berfungsi untuk melakukan transisi dari halaman ke halaman.
+- ```Icon```, berfungsi untuk memberikan elemen _icon_.
+- ```DropdownButton```, berfungsi untuk menambahkan tombol yang mengarah kepada bagian yang akan berisi elemen-elemen yang ingin ditampilkan.
+- ```DropdownMenuItem```, berfungsi untuk menampilkan isi elemen-elemen yang ingin ditampilkan setelah _button_ ```DropdownButton``` dipencet.
+- ```toList```, berfungsi untuk menampung elemen-elemen yang diinginkan pada bentuk _list_.
+- ```Card```, berfungsi untuk menampung elemen yang ingin ditampilkan dalam bentuk _card_ yang disesuaikan dengan keinginan.
+- ```Form```, berfungsi untuk menyimpan data dari pengguna yang disesuaikan dengan _form field widgets_ yang digunakan.
+
+- (Wigdet untuk Tugas 7 sebelumnya yang dipakai dalam tugas 8)
+- ```Text```, berfungsi untuk menampilkan text pada _app_.
+- ```AppBar```, berfungsi untuk memberikan judul dari _app_.
+- ```Scaffold```, berfungsi untuk memberikan _base_ dari _app_.
+- ```Row```, berfungsi untuk mengatur _layout_ dari tombol _increment_ dan _decrement_ pada _app_.
+- ```Visibility```, berfungsi untuk menghilangkan tombol _decrement_ apabila tombol _increment_ belum dipencet.
+- ```Center```, berfungsi untuk memposisikan semua _widget_ pada bagian tengah.
+- ```Theme```, berfungsi untuk memberikan tema pada _app_.
+- ```Icon```, berfungsi untuk mengatur tanda dari tombol pada _app_.
+
+- (Wigdet untuk Tugas 8 sebelumnya yang dipakai dalam tugas 9)
+- ```Drawer```, befungsi untuk membuat _drawer_ yang berfungsi dalam berpindah halaman.
+- ```Container```,  berfungsi sebagai wadah dalam menampung _widgets_.
+- ```ListView```, berfungsi dalam mengelompokkan beberapa objek dan dapat di-_scroll_ dalam tampilan halaman.
+- ```FutureBuilder```, berfungsi dalam membuat widget berdasarkan interaksi dengan _widget_ dan untuk mengambil data.
+
+
+##  Jelaskan mekanisme pengambilan data dari json hingga dapat ditampilkan pada Flutter.
+- Pertama, tambahkan paket http dengan perintah ```flutter pub add http```
+- Kedua, berikan akses internet ke proyek yang sedang dibuat dengan menambahkan beberapa baris kode ke file android/app/src/main/AndroidManifest.xml. 
+- Ketiga, data json diperoleh dengan mengambil metode di file fetchwatchlist.dart. 
+- Keempat, data yang diambil akan dikonversi berdasarkan kode di watchlist.dart di folder model.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas.
+
+- Membuat folder _model_, yang berisikan konversi data JSON menjadi kode Dart, yang berfungsi mengambil _field_ dan isi dari _field_ data tersebut. Lalu membuat file ```mywatchlist.dart```, yang berisikan kode Dart yang sudah di-_convert_.
+
+```
+// To parse this JSON data, do
+//
+//     final myWatchListModel = myWatchListModelFromJson(jsonString);
+
+import 'dart:convert';
+
+List<MyWatchListModel> myWatchListModelFromJson(String str) => List<MyWatchListModel>.from(json.decode(str).map((x) => MyWatchListModel.fromJson(x)));
+
+String myWatchListModelToJson(List<MyWatchListModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class MyWatchListModel {
+    MyWatchListModel({
+        required this.model,
+        required this.pk,
+        required this.fields,
+    });
+
+    Model? model;
+    int pk;
+    Fields fields;
+
+    factory MyWatchListModel.fromJson(Map<String, dynamic> json) => MyWatchListModel(
+        model: modelValues.map[json["model"]],
+        pk: json["pk"],
+        fields: Fields.fromJson(json["fields"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "model": modelValues.reverse[model],
+        "pk": pk,
+        "fields": fields.toJson(),
+    };
+}
+class Fields {
+    Fields({
+        required this.watched,
+        required this.title,
+        required this.rating,
+        required this.releaseDate,
+        required this.review,
+    });
+
+    Watched? watched;
+    String title;
+    int rating;
+    String releaseDate;
+    String review;
+
+    factory Fields.fromJson(Map<String, dynamic> json) => Fields(
+        watched: watchedValues.map[json["watched"]],
+        title: json["title"],
+        rating: json["rating"],
+        releaseDate: json["release_date"],
+        review: json["review"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "watched": watchedValues.reverse[watched],
+        "title": title,
+        "rating": rating,
+        "release_date": releaseDate,
+        "review": review,
+    };
+}
+
+enum Watched { YES }
+
+final watchedValues = EnumValues({
+    "yes": Watched.YES
+});
+
+enum Model { MYWATCHLIST_MYWATCHLIST }
+
+final modelValues = EnumValues({
+    "mywatchlist.mywatchlist": Model.MYWATCHLIST_MYWATCHLIST
+});
+
+class EnumValues<T> {
+    Map<String, T> map;
+    Map<T, String>? reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String> get reverse {
+        if (reverseMap == null) {
+            reverseMap = map.map((k, v) => new MapEntry(v, k));
+        }
+        return reverseMap!;
+    }
+}
+ ```
+
+- Membuat folder ```page```, yang akan berisikan ```drawer.dart```, ```fetchwatchlist.dart```, dan ```mywatchlist.dart```. 
+
+```drawer.dart``` akan berfungsi untuk mempersingkat file-file pada aplikasi dengan meng-_import_  ```ListTile``` kepada setiap halaman. 
+```fetchwatchlist.dart``` berfungsi untuk mengambil data dari link yang mengandung data JSON dan memasukannya dalam sebuah _list_ kosong. 
+```mywatchlist.dart``` berfungsi untuk menampilkan data-data dari JSON yang sudah di-_fetch_.
+
+
+- Melakukan _routing_ dengan menambahkan ```ListTile``` baru pada ```drawer.dart``` untuk ```MyWatchlistPage```.
+
+```
+ListTile(
+            title: const Text('My Watch List'),
+            onTap: () {
+                // Route menu ke halaman to do
+                Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const MyWatchListPage()),
+                );
+            },
+        ),
+```
+
 ## Referensi
 - https://stackoverflow.com/questions/50431055/what-is-the-difference-between-the-const-and-final-keywords-in-dart
 - https://dev.to/nicks101/when-to-use-setstate-in-flutter-380
@@ -257,3 +416,5 @@ for (int i=0; i < formData.length; i++)...[
 - https://api.flutter.dev/flutter/widgets/Navigator/pushReplacement.html
 - https://api.flutter.dev/flutter/widgets/Navigator-class.html#:~:text=Using%20the%20Navigator%20API&text=In%20Flutter%20these%20elements%20are,push%20and%20Navigator.
 - https://api.flutter.dev/flutter/widgets/Navigator-class.html#:~:text=Using%20the%20Navigator%20API&text=In%20Flutter%20these%20elements%20are,push%20and%20Navigator.
+- https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html
+- https://docs.flutter.dev/development/data-and-backend/json
